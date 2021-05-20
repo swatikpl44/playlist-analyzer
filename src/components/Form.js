@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { getPlaylistDetails, getVideoDetails } from "../services/detail.js";
+import {
+  getPlaylistDetails,
+  getVideoDetails,
+  findTime,
+} from "../services/detail.js";
+import styles from "./styles/formStyle.module.css";
 
 const Form = (props) => {
   const [url, setUrl] = useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [allTime, setAllTime] = useState("");
+  const [len, setLen] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,12 +19,10 @@ const Form = (props) => {
 
     var playlistId;
     var match = url.match(url_regex);
-    console.log(match);
     if (match) {
       playlistId = match[2];
     }
 
-    console.log(playlistId);
     if (!playlistId) {
       setErrorMessage(
         "The playlist identified with the request's playlistId parameter cannot be found."
@@ -29,13 +34,17 @@ const Form = (props) => {
     const { data, error } = await getPlaylistDetails(playlistId);
 
     if (!error) {
-      console.log("result", data);
-      const parsedVideosData = getVideoDetails(data);
-      console.log("Videos", parsedVideosData);
-      // createBarChartFromData(parsedVideosData.videos);
+      const parsedVideosData = await getVideoDetails(data);
+
+      const allTime = findTime(parsedVideosData.videos);
+      const len = parsedVideosData.videos.length;
+      setLen(len);
+
+      setAllTime(allTime);
+      console.log("allTime", allTime);
     } else {
       setErrorMessage(
-        "2. The playlist identified with the request's playlistId parameter cannot be found."
+        "The playlist identified with the request's playlistId parameter cannot be found."
       );
     }
   };
@@ -61,7 +70,7 @@ const Form = (props) => {
 
       <div className="container">
         <form onSubmit={handleSubmit}>
-          <label> Find the length of any YouTube playlist : </label>
+          <label> Find details of any YouTube playlist : </label>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -73,7 +82,7 @@ const Form = (props) => {
             />
             <div className="input-group-append">
               <button type="submit" className="btn btn-danger">
-                Get Length
+                Submit
               </button>
             </div>
           </div>
@@ -86,6 +95,16 @@ const Form = (props) => {
         </form>
 
         {errorMessage && <div className="error"> {errorMessage} </div>}
+        {allTime && (
+          <div className={styles.result}>
+            <p> Number of videos: {len}</p>
+            <p>Total duration : {allTime.totatDurationAt100x} </p>
+            <p> At 1.25x : {allTime.totatDurationAt125x} </p>
+            <p> At 1.50x : {allTime.totatDurationAt150x} </p>
+            <p> At 1.75x : {allTime.totatDurationAt175x} </p>
+            <p> At 2.00x : {allTime.totatDurationAt200x} </p>
+          </div>
+        )}
       </div>
     </div>
   );
