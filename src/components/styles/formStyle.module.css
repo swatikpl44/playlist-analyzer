@@ -1,3 +1,30 @@
 .result {
   margin-top: 4%;
+  margin-bottom: 4%;
+}
+
+.infomsg {
+  margin-top: 5%;
+  overflow-wrap: break-word;
+  /* display: inline-block; */
+  text-align: center;
+}
+
+a {
+  color: #33b5e5;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0099cc;
+  text-decoration: none;
+}
+
+.errormsg {
+  margin-top: 10%;
+  text-align: center;
+}
+
+.graphContainer {
+  height: 500px;
 }

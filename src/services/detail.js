@@ -42,13 +42,16 @@ export const getVideoDetails = async (data) => {
 };
 
 export const findTime = (videos) => {
-  const videosDurationList = videos.map((item) => Math.round(item.duration));
+  let videosDurationList = videos.map((item) => Math.round(item.duration));
 
   const titleList = videos.map((item) => item.title);
   const totalSeconds = videosDurationList.reduce((acc, total) => acc + total);
 
   console.log(totalSeconds);
-  return updateAtSpeed(totalSeconds);
+  const timeData = updateAtSpeed(totalSeconds);
+
+  videosDurationList = videos.map((item) => (item.duration / 60).toFixed(2));
+  return { videosDurationList, titleList, timeData };
 };
 
 const getAllVideoDetails = async (ids) => {

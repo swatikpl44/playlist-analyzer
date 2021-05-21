@@ -4,6 +4,7 @@ import {
   getVideoDetails,
   findTime,
 } from "../services/detail.js";
+import Graph from "./Graph";
 import styles from "./styles/formStyle.module.css";
 
 const Form = (props) => {
@@ -44,9 +45,13 @@ const Form = (props) => {
       console.log("allTime", allTime);
     } else {
       setErrorMessage(
-        "The playlist identified with the request's playlistId parameter cannot be found."
+        "Sorry, the requested playlist cannot be found. Please check your link again."
       );
     }
+  };
+
+  const handleUrl = (e) => {
+    setUrl(e.target.value);
   };
 
   return (
@@ -68,6 +73,7 @@ const Form = (props) => {
         </ul>
       </nav>
 
+      <hr />
       <div className="container">
         <form onSubmit={handleSubmit}>
           <label> Find details of any YouTube playlist : </label>
@@ -77,7 +83,7 @@ const Form = (props) => {
               className="form-control"
               placeholder="youtube.com/playlist?list=ID"
               name="playlistUrl"
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={handleUrl}
               value={url}
             />
             <div className="input-group-append">
@@ -93,18 +99,57 @@ const Form = (props) => {
             This only works with playlists with upto 500 videos.
           </small>
         </form>
+        <hr />
 
-        {errorMessage && <div className="error"> {errorMessage} </div>}
-        {allTime && (
-          <div className={styles.result}>
-            <p> Number of videos: {len}</p>
-            <p>Total duration : {allTime.totatDurationAt100x} </p>
-            <p> At 1.25x : {allTime.totatDurationAt125x} </p>
-            <p> At 1.50x : {allTime.totatDurationAt150x} </p>
-            <p> At 1.75x : {allTime.totatDurationAt175x} </p>
-            <p> At 2.00x : {allTime.totatDurationAt200x} </p>
+        {errorMessage && (
+          <div className={`alert alert-danger ${styles.errormsg}`}>
+            {errorMessage}
           </div>
         )}
+        {allTime && (
+          <div className={styles.result}>
+            <p>
+              <b>Number of videos :</b> {len}
+            </p>
+            <p>
+              <b> Total duration : </b>
+              {allTime.timeData.totatDurationAt100x}{" "}
+            </p>
+            <p>
+              <b>At 1.25x : </b> {allTime.timeData.totatDurationAt125x}{" "}
+            </p>
+            <p>
+              <b>At 1.50x : </b> {allTime.timeData.totatDurationAt150x}{" "}
+            </p>
+            <p>
+              <b>At 1.75x : </b> {allTime.timeData.totatDurationAt175x}{" "}
+            </p>
+            <p>
+              <b>At 2.00x : </b> {allTime.timeData.totatDurationAt200x}{" "}
+            </p>
+            <Graph allTime={allTime} />
+          </div>
+        )}
+
+        <div
+          className={`alert alert-info alert-dismissible fade show ${styles.infomsg}`}
+          role="alert"
+        >
+          You can try out this sample playlist link -{" "}
+          <strong>
+            <a href="https://www.youtube.com/watch?v=VW85xQ6GJP4&list=PL2q4fbVm1Ik6DCzm9XZJbNwyHtHGclcEh">
+              https://www.youtube.com/watch?v=VW85xQ6GJP4&list=PL2q4fbVm1Ik6DCzm9XZJbNwyHtHGclcEh
+            </a>
+          </strong>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
       </div>
     </div>
   );
