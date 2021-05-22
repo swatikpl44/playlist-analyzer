@@ -6,11 +6,12 @@ import {
 } from "../services/detail.js";
 import Graph from "./Graph";
 import styles from "./styles/formStyle.module.css";
+import logo from "./assets/logo.png";
 
 const Form = (props) => {
   const [url, setUrl] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [allTime, setAllTime] = useState("");
+  let [errorMessage, setErrorMessage] = useState("");
+  let [allTime, setAllTime] = useState("");
   const [len, setLen] = useState("");
 
   const handleSubmit = async (e) => {
@@ -34,6 +35,8 @@ const Form = (props) => {
 
     const { data, error } = await getPlaylistDetails(playlistId);
 
+    setErrorMessage("");
+    setAllTime("");
     if (!error) {
       const parsedVideosData = await getVideoDetails(data);
 
@@ -55,14 +58,20 @@ const Form = (props) => {
   };
 
   return (
-    <div className="container mt-4">
-      <nav className="mb-4 navbar navbar-expand-lg navbar-light">
-        <a className="navbar-brand" href="#">
-          <img src="https://i.imgur.com/PjcsUXm.png" height="60" alt="" />
+    <div className={`container ${styles.entirePage}`}>
+      <nav
+        className={`mb-4 navbar navbar-expand-lg navbar-light ${styles.navigation}`}
+      >
+        <a className="navbar-brand" href="/">
+          <img src={logo} className={styles.logo} alt="" />
         </a>
         <ul className="navbar-nav ml-auto">
           <li className="nav-item active">
-            <a className="nav-link" href="https://github.com/swatikpl44">
+            <a
+              className="nav-link"
+              href="https://github.com/swatikpl44/playlist-analyzer"
+              target="__blank"
+            >
               <img
                 src="https://image.flaticon.com/icons/svg/25/25231.svg"
                 height="30"
@@ -96,7 +105,7 @@ const Form = (props) => {
             You can enter a playlist link, playlist ID or even a video link from
             the playlist!
             <br />
-            This only works with playlists with upto 500 videos.
+            This only works with playlists upto 50 videos.
           </small>
         </form>
         <hr />
@@ -130,26 +139,38 @@ const Form = (props) => {
             <Graph allTime={allTime} />
           </div>
         )}
-
-        <div
-          className={`alert alert-info alert-dismissible fade show ${styles.infomsg}`}
-          role="alert"
+        {(errorMessage || !allTime) && (
+          <div className={`alert alert-info ${styles.infomsg}`} role="alert">
+            You can try out this sample playlist link -{" "}
+            <strong>
+              <a
+                href="https://www.youtube.com/watch?v=1wZoGFF_oi4&list=PLZlA0Gpn_vH_NT5zPVp18nGe_W9LqBDQK"
+                target="__blank"
+              >
+                https://www.youtube.com/watch?v=1wZoGFF_oi4&list=PLZlA0Gpn_vH_NT5zPVp18nGe_W9LqBDQK
+              </a>
+            </strong>
+            {/* <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button> */}
+          </div>
+        )}
+      </div>
+      <div className={styles.footer}>
+        <hr />
+        Made using <i>React.js</i> by{" "}
+        <a
+          href="https://www.linkedin.com/in/swatik-paul-1218b3136"
+          target="__blank"
         >
-          You can try out this sample playlist link -{" "}
-          <strong>
-            <a href="https://www.youtube.com/watch?v=VW85xQ6GJP4&list=PL2q4fbVm1Ik6DCzm9XZJbNwyHtHGclcEh">
-              https://www.youtube.com/watch?v=VW85xQ6GJP4&list=PL2q4fbVm1Ik6DCzm9XZJbNwyHtHGclcEh
-            </a>
-          </strong>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+          {" "}
+          Swatik Paul
+        </a>
       </div>
     </div>
   );

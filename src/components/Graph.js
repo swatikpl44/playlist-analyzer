@@ -17,7 +17,7 @@ const Graph = (props) => {
   };
 
   return (
-    <div className="graphContainer">
+    <div>
       <Bar
         data={data}
         height={450}
