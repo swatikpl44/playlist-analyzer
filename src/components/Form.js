@@ -54,7 +54,13 @@ const Form = (props) => {
   };
 
   const handleUrl = (e) => {
-    setUrl(e.target.value);
+    setUrl(
+      e.target.value
+        .trim()
+        .split("  ")
+        .filter((word) => word !== "")
+        .join(" ")
+    );
   };
 
   return (
@@ -69,7 +75,7 @@ const Form = (props) => {
           <li className="nav-item active">
             <a
               className="nav-link"
-              href="https://github.com/swatikpl44/playlist-analyzer"
+              href="https://github.com/swatikpl44/playlist-duration-calc"
               target="__blank"
             >
               <img
@@ -85,7 +91,7 @@ const Form = (props) => {
       <hr />
       <div className="container">
         <form onSubmit={handleSubmit}>
-          <label> Find details of any YouTube playlist : </label>
+          <label> Find duration of any YouTube playlist : </label>
           <div className="input-group mb-3">
             <input
               type="text"
@@ -94,6 +100,7 @@ const Form = (props) => {
               name="playlistUrl"
               onChange={handleUrl}
               value={url}
+              required
             />
             <div className="input-group-append">
               <button type="submit" className="btn btn-danger">
